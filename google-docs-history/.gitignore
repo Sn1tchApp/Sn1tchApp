@@ -38,5 +38,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
+service-account-key.json
 */service-account-key.json
