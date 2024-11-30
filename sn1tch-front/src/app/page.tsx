@@ -1,66 +1,70 @@
-"use client";
+import React from "react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/authOptions";
+import { redirect } from "next/navigation";
+import LogoutButton from "./components/LogoutButton";
+import { prisma } from "@/lib/prisma";
+import Link from "next/link"; // Step 1: Import Link component
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+export default async function homePage() {
+  const session = (await getServerSession(authOptions)) as any;
 
-export default function IntegrationScreen() {
-  const [githubLink, setGithubLink] = useState("");
-  const [accessToken, setAccessToken] = useState("");
-  const router = useRouter();
-
-  const handleSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    router.push(
-      `/dashboard?githubLink=${githubLink}&accessToken=${accessToken}`
-    );
-  };
+  if (!session) {
+    redirect("/login");
+  }
+  const projects = await prisma.project.findMany({
+    where: { userId: session?.user?.id || "inexistente" },
+    include: {
+      students: true,
+    },
+  });
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      <h1 className="text-2xl font-bold mb-8 text-gray-900">
-        Integração com o GitHub
-      </h1>
-      <form onSubmit={handleSubmit} className="w-full max-w-lg">
-        <div className="mb-6">
-          <label
-            htmlFor="githubLink"
-            className="block mb-2 text-sm font-medium text-gray-900"
-          >
-            Link do Repositório do GitHub
-          </label>
-          <input
-            type="text"
-            id="githubLink"
-            value={githubLink}
-            onChange={(e) => setGithubLink(e.target.value)}
-            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="https://github.com/seu-usuario/seu-repositorio"
-            required
-          />
-        </div>
-        <div className="mb-6">
-          <label
-            htmlFor="accessToken"
-            className="block mb-2 text-sm font-medium text-gray-900"
-          >
-            Token de Acesso (Opcional)
-          </label>
-          <input
-            type="text"
-            id="accessToken"
-            value={accessToken}
-            onChange={(e) => setAccessToken(e.target.value)}
-            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="Token de Acesso"
-          />
-        </div>
-        <button
-          type="submit"
-          className="text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+      <h1 className="text-2xl font-bold mb-8 text-gray-900">Projetos</h1>
+      <ul className="w-full max-w-2xl">
+        {projects.length === 0 && (
+          <div className="flex flex-col items-center">
+            <li className="mb-4 p-4 bg-white shadow rounded">
+              <p className="text-lg font-semibold">
+                Nenhum projeto cadastrado ainda
+              </p>
+            </li>
+            <Link
+              className="bg-black text-white px-4 py-2 rounded"
+              href="/projeto/cadastrar"
+            >
+              Cadastrar Projeto
+            </Link>
+          </div>
+        )}
+        {projects.map((project) => (
+          <li key={project.id} className="mb-4 p-4 bg-white shadow rounded">
+            <Link href={`/projeto/${project.id}`}>
+              <h2>{project.url.replace("https://github.com/", "")}</h2>
+              <h2 className="text-md font-medium mt-2">Estudantes:</h2>
+              <ul className="list-disc list-inside">
+                {project.students.map((student) => (
+                  <li key={student.id} className="ml-4 mb-4 list-none">
+                    <p>
+                      <b>{student.name}</b> {`<${student.email}>`}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <div className="absolute top-0 right-0 m-4">
+        <Link
+          className="bg-black text-white px-4 py-2 rounded mr-2"
+          href="/projeto/cadastrar"
         >
-          Integrar
-        </button>
-      </form>
+          Cadastrar Projeto
+        </Link>
+        <LogoutButton />
+      </div>
     </div>
   );
 }

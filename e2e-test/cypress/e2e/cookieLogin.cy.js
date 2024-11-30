@@ -1,4 +1,4 @@
-context("Dado que não fiz login na plataforma", () => {
+context("Dado que estou logado na plataforma", () => {
   beforeEach(() => {
     cy.clearCookies();
     cy.setCookie("__Host-next-auth.csrf-token", Cypress.env("CRF_TOKEN"), {
@@ -30,6 +30,7 @@ context("Dado que não fiz login na plataforma", () => {
   describe("Quando acesso a plataforma", () => {
     it("Devo conseguir fazer login e visualizar a homepage com botão de cadastrar", () => {
       cy.contains("h1", "Projetos");
+      cy.contains("button", "Cadastrar");
     });
   });
 });
