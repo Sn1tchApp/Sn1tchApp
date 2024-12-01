@@ -63,7 +63,7 @@ export default async function handler(req, res) {
         const authClient = await directoryAuth.getClient();
 
         // Impersonar um administrador do Google Workspace
-        authClient.subject = "mwl@cesar.school"; // Substitua pelo e-mail do administrador
+        authClient.subject = process.env.GOOGLE_ADMIN_ACCOUNT; // Substitua pelo e-mail do administrador
 
         const directory = google.admin({ version: "directory_v1", auth: authClient });
 
