@@ -1,41 +1,22 @@
-import { useEffect, useState } from "react";
+import React from "react";
+import styles from "../styles/Home.module.css";
 
-export default function Home() {
-  const [revisions, setRevisions] = useState([]);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchRevisions = async () => {
-      try {
-        const response = await fetch("/api/revisions");
-        if (!response.ok) {
-          throw new Error("Erro ao buscar revisões");
-        }
-        const data = await response.json();
-        setRevisions(data);
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-
-    fetchRevisions();
-  }, []);
-
+const Home = () => {
   return (
-    <div>
-      <h1>Histórico de Versões do documento</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <ul>
-        {revisions.map((rev) => (
-          <li key={rev.id}>
-            <strong>Versão - {rev.version}</strong> <br />
-            <strong>Modificada em:</strong>{" "}{new Date(rev.modifiedTime).toLocaleString()}<br />
-            <strong>Autor:</strong> {rev.author}<br />
-            <strong>Email:</strong> {rev.email}<br />
-            <strong>Descrição:</strong> {rev.description}<br /><br />
-          </li>
-        ))}
-      </ul>
+    <div className={styles.container}>
+      <h1>Bem-vindo ao Histórico de Revisões</h1>
+      <br /><br />
+      <p>Escolha como deseja visualizar as revisões:</p><br />
+      <div className={styles.buttons}>
+        <a href="/revisions" className={styles.button}>
+          Ver Revisões em Lista
+        </a>
+        <a href="/timeline" className={styles.button}>
+          Ver Revisões em Timeline
+        </a><br /><br />
+      </div>
     </div>
   );
-}
+};
+
+export default Home;

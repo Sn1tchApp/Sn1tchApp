@@ -79,7 +79,7 @@ export default async function handler(req, res) {
     const activityResponse = await driveActivity.activity.query({
       requestBody: {
         itemName: `items/${documentId}`,
-        pageSize: 100,
+        pageSize: 1000,
       },
     });
 

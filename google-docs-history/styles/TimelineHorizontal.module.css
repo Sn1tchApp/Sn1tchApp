@@ -1,0 +1,80 @@
+.container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+  }
+  
+  .h1 {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .timeline {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 20px;
+    gap: 40px;
+  }
+  
+  .timelineItem {
+    min-width: 250px;
+    border: 2px solid #0070f3;
+    border-radius: 8px;
+    padding: 15px;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+  }
+  
+  .timelineItem h2 {
+    margin: 0 0 10px;
+    color: #005bb5;
+    text-align: center;
+  }
+  
+  .revisionsList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .revision {
+    border-top: 1px solid #ddd;
+    padding: 10px 0;
+  }
+  
+  .revision:first-child {
+    border-top: none;
+  }
+  
+  .revision p {
+    margin: 5px 0;
+    font-size: 14px;
+  }
+
+  .backButtonTop {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #007bff; /* Azul */
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+  
+  .backButtonTop:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  .backButtonTop:active {
+    background-color: #004085;
+    transform: scale(0.98);
+  }
