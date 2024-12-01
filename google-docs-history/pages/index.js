@@ -28,10 +28,11 @@ export default function Home() {
       <ul>
         {revisions.map((rev) => (
           <li key={rev.id}>
-            <strong>Versão {rev.id}</strong> - Modificada em:{" "}
-            {new Date(rev.modifiedTime).toLocaleString()}<br />
+            <strong>Versão - {rev.version}</strong> <br />
+            <strong>Modificada em:</strong>{" "}{new Date(rev.modifiedTime).toLocaleString()}<br />
             <strong>Autor:</strong> {rev.author}<br />
-            <strong>Descrição:</strong> {rev.description}
+            <strong>Email:</strong> {rev.email}<br />
+            <strong>Descrição:</strong> {rev.description}<br /><br />
           </li>
         ))}
       </ul>
