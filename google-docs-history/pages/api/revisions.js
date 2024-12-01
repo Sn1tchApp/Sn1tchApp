@@ -125,6 +125,7 @@ export default async function handler(req, res) {
 
     console.log("Atividades formatadas (ordenadas corretamente):", JSON.stringify(formattedActivities, null, 2));
     res.status(200).json(formattedActivities);
+    
   } catch (error) {
     console.error("Erro ao buscar atividades:", error);
     res.status(500).json({ error: "Erro ao buscar atividades" });

@@ -23,7 +23,7 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Histórico de Versões</h1>
+      <h1>Histórico de Versões do documento</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <ul>
         {revisions.map((rev) => (
