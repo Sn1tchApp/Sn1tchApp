@@ -13,6 +13,9 @@ const Home = () => {
         </a>
         <a href="/timeline" className={styles.button}>
           Ver Revisões em Timeline
+        </a>
+        <a href="/charts" className={styles.button}>
+          Ver Revisões em Gráficos
         </a><br /><br />
       </div>
     </div>

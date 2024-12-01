@@ -1,0 +1,56 @@
+.chartContainer {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chartContainer h2 {
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .backButtonTop {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
+  .backButtonTop:hover {
+    background-color: #0056b3;
+  }
+
+  .container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .backButtonTop {
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+  
+  .chartContainer {
+    margin: 30px auto;
+    max-width: 800px;
+  }
+  
+  .chartContainer h2 {
+    margin-bottom: 20px;
+  }
+  
+  .pieChart {
+    width: 50%; /* Reduz tamanho em 50% */
+    margin: 0 auto;
+  }
+  
