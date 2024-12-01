@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/authOptions";
 
 export async function POST(request: Request) {
-  const { url, students } = await request.json();
+  const { url, driveUrl, students } = await request.json();
 
   if (!url || students.length === 0) {
     return NextResponse.json(
@@ -25,6 +25,7 @@ export async function POST(request: Request) {
           connect: { id: userId }, // Relaciona o projeto ao usuário autenticado
         },
         url,
+        driveUrl,
         students: {
           create: students.map((student: { name: string; email: string }) => ({
             name: student.name,

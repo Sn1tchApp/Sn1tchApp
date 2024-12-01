@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/authOptions";
 import { redirect } from "next/navigation";
 import LogoutButton from "@/app/components/LogoutButton";
+import StudentSummary from "./StudentSummary";
 export const dynamic = "force-dynamic";
 
 // Função para buscar os dados da API do GitHub
@@ -26,8 +27,6 @@ const getData = async (url: string, token: string) => {
           },
         }
       : {};
-
-    console.log("headers", headers);
 
     try {
       const response = await axios.get(
@@ -91,6 +90,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   // 2. Obtenha a URL do projeto no GitHub e, opcionalmente, o token de acesso se necessário
   const githubLink = project.url;
+  const driveLink = project.driveUrl;
 
   const accessToken = account?.access_token || ""; // TODO fazer a busca do token de acesso do usuário
 
@@ -132,22 +132,11 @@ export default async function Page({ params }: { params: { id: string } }) {
       <h1 className="text-2xl font-bold mb-8 mt-16 text-gray-900">
         Dados do projeto {githubLink.replace("https://github.com/", "")}
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-16">
-        {authorsByContributions.map((author: any, index: number) => (
-          <Card key={index} className="max-w-sm">
-            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {author.name}
-            </h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              <strong>{author.timeline.length}</strong> commits feitos no
-              projeto
-            </p>
-            <p className="font-normal text-gray-700 dark:text-gray-400 break-words">
-              Email: {author.email}
-            </p>
-          </Card>
-        ))}
-      </div>
+      <StudentSummary
+        authorsByContributions={authorsByContributions}
+        combinedTimeline={combinedTimeline}
+        driveLink={driveLink}
+      />
       <Card>
         <GitTimeline combinedTimeline={combinedTimeline} />
       </Card>

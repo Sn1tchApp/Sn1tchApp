@@ -10,6 +10,7 @@ interface Student {
 
 export default function ProjectForm() {
   const [url, setUrl] = useState("");
+  const [driveUrl, setDriveUrl] = useState("");
   const [students, setStudents] = useState<Student[]>([
     { name: "", email: "" },
   ]);
@@ -42,6 +43,7 @@ export default function ProjectForm() {
       },
       body: JSON.stringify({
         url,
+        driveUrl,
         students,
       }),
     });
@@ -72,6 +74,23 @@ export default function ProjectForm() {
           required
           className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
           placeholder="https://github.com/..."
+        />
+      </div>
+      <div className="mt-6">
+        <label
+          className="block mb-2 text-sm font-medium text-gray-900"
+          htmlFor="url"
+        >
+          URL do Docs do Projeto (Com visualização pública na url):
+        </label>
+        <input
+          type="driveUrl"
+          id="driveUrl"
+          value={driveUrl}
+          onChange={(e) => setDriveUrl(e.target.value)}
+          required
+          className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="https://docs.google.com/document/d/..."
         />
       </div>
       <div className="flex">

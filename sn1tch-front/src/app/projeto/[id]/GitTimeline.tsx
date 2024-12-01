@@ -3,7 +3,6 @@
 import { Timeline } from "flowbite-react";
 
 const GitTimeline = ({ combinedTimeline }: any) => {
-  console.log(combinedTimeline);
   if (!combinedTimeline) {
     return null;
   }
