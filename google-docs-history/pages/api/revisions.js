@@ -9,10 +9,10 @@ export default async function handler(req, res) {
 
   try {
     console.log("API Drive Activity sendo chamada");
-    console.log("Autenticação configurada:", process.env.GOOGLE_PRIVATE_KEY_ID);
-    console.log("Autenticação configurada:", process.env.GOOGLE_PRIVATE_KEY);
-    console.log("Autenticação configurada:", process.env.GOOGLE_CLIENT_EMAIL);
-    console.log("Autenticação configurada:", process.env.GOOGLE_CLIENT_ID);
+    //console.log("Autenticação configurada:", process.env.GOOGLE_PRIVATE_KEY_ID);
+    //console.log("Autenticação configurada:", process.env.GOOGLE_PRIVATE_KEY);
+    //console.log("Autenticação configurada:", process.env.GOOGLE_CLIENT_EMAIL);
+    //console.log("Autenticação configurada:", process.env.GOOGLE_CLIENT_ID);
     // Configurar autenticação para Drive Activity
     const driveAuth = new google.auth.GoogleAuth({
       credentials: {
