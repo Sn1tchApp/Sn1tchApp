@@ -1,67 +1,92 @@
 import React, { useEffect, useState } from "react";
+import styles from '../styles/Compare.module.css'; // Adicionando o arquivo de estilos
 
 const Compare = () => {
   const [revisions, setRevisions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [comparisons, setComparisons] = useState([]);
 
-  const fetchWithTimeout = async (url, options = {}, timeout = 10000) => {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeoutId);
-    return response;
+  const fetchRevisions = async () => {
+    try {
+      const response = await fetch("/api/listRevisions");
+      if (!response.ok) {
+        throw new Error(`Erro ao buscar revisões: ${response.statusText}`);
+      }
+      const data = await response.json();
+      setRevisions(data);
+    } catch (err) {
+      setError(`Erro ao buscar revisões: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const fetchRevisionsWithRetry = async (retries = 1, delay = 30000) => {
-    let lastError;
-    for (let i = 0; i < retries; i++) {
-      try {
-        const response = await fetchWithTimeout("/api/compare", { method: "GET" }, 30000); // Timeout de 30 segundos
-        if (!response.ok) {
-          throw new Error(`Erro ao buscar revisões: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-
-        // Verificar se a resposta contém as revisões e a estrutura esperada
-        if (!Array.isArray(data)) {
-          throw new Error("Formato de dados inválido: Esperado um array de revisões.");
-        }
-
-        setRevisions(data);
-        return; // Se a requisição for bem-sucedida, sai da função
-      } catch (err) {
-        lastError = err;
-        if (i < retries - 1) {
-          console.log(`Tentando novamente... (${i + 1}/${retries})`);
-          await new Promise(resolve => setTimeout(resolve, delay)); // Espera antes de tentar novamente
-        }
+  const fetchRevision = async ( revision ) => {
+    try {
+      const response = await fetch(`/api/getRevision?revisionId=${revision}`);
+      if (!response.ok) {
+        throw new Error(`Erro ao buscar revisões: ${response.statusText}`);
       }
+      const data = await response.json();
+      setRevisions(data);
+    } catch (err) {
+      setError(`Erro ao buscar revisões: ${err.message}`);
+    } finally {
+      setLoading(false);
     }
-    throw lastError; // Lança o último erro após as tentativas
+  };
+
+  const fetchComparison = async (rev1, rev2) => {
+    try {
+      console.log(`Buscando comparação entre ${rev1} e ${rev2}`);
+      const response = await fetch(
+        `/api/diffRevisions?rev1=${rev1}&rev2=${rev2}`
+      );
+      if (!response.ok) {
+        throw new Error(`Erro ao buscar comparação: ${response.statusText}`);
+      }
+      const data = await response.json();
+      console.log("Dados retornados pelo backend:", data);
+      return data;
+    } catch (err) {
+      console.error(err);
+      return { differences: "" };
+    }
+  };
+
+  const generateComparisons = async () => {
+    const comparisons = [];
+    for (let i = 0; i < revisions.length - 1; i++) {
+      const diff = await fetchComparison(revisions[i].id, revisions[i + 1].id);
+      comparisons.push({
+        rev1: revisions[i],
+        rev2: revisions[i + 1],
+        diff: diff,
+      });
+    }
+    return comparisons;
   };
 
   useEffect(() => {
-    const fetchRevisions = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        await fetchRevisionsWithRetry(); // Chama a função com a lógica de retentativa
-      } catch (err) {
-        setError(`Erro ao buscar revisões: ${err.message}`);
-      } finally {
-        setLoading(false);
+    const loadData = async () => {
+      setLoading(true);
+      setError(null);
+      await fetchRevisions();
+    };
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    const loadComparisons = async () => {
+      if (revisions.length > 1) {
+        const results = await generateComparisons();
+        console.log("Comparisons gerados:", results);
+        setComparisons(results);
       }
     };
-
-    fetchRevisions();
-  }, []);
+    loadComparisons();
+  }, [revisions]);
 
   if (loading) {
     return <p>Carregando revisões...</p>;
@@ -72,42 +97,47 @@ const Compare = () => {
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Comparação de Revisões</h1>
-      {revisions.length === 0 ? (
-        <p>Nenhuma revisão encontrada.</p>
+    <div className={styles.container}>
+      <a href="/" className={styles.backButtonTop}>
+        Voltar para o Home
+      </a>
+      <br /><br /><br />
+      <h1 className={styles.title}>Comparação de Revisões</h1>
+
+      {comparisons.length === 0 ? (
+        <p>Nenhuma comparação encontrada.</p>
       ) : (
-        revisions.map((rev, index) => (
-          <div
-            key={index}
-            className="border border-gray-300 p-4 mb-4 rounded-lg"
-          >
-            <h3 className="text-lg font-semibold">
-              Revisão {rev.revision}
+        comparisons.map((comp, index) => (
+          <div key={index} className={styles.revisionBox}>
+            <h3 className={styles.revisionTitle}>
+              Comparação entre Revisão {comp.rev1.id} e Revisão {comp.rev2.id}
             </h3>
             <p>
-              <strong>Data:</strong>{" "}
-              {rev.modifiedTime ? new Date(rev.modifiedTime).toLocaleString() : "Data não disponível"}
+              <strong>Data Revisão {comp.rev1.id}:</strong>{" "}
+              {new Date(comp.rev1.modifiedTime).toLocaleString("pt-BR")}
             </p>
-            <div className="mt-2">
-              {/* Verifique se 'rev.diff' é um array e tem conteúdo */}
-              {Array.isArray(rev.diff) && rev.diff.length > 0 ? (
-                rev.diff.map(([type, text], idx) => (
-                  <span
+            <p>
+              <strong>Data Revisão {comp.rev2.id}:</strong>{" "}
+              {new Date(comp.rev2.modifiedTime).toLocaleString("pt-BR")}
+            </p>
+            <div className={styles.diffContainer}>
+              {comp.diff && comp.diff.differences ? (
+                comp.diff.differences.split("\n").map((line, idx) => (
+                  <p
                     key={idx}
-                    className={
-                      type === -1
-                        ? "text-red-500"
-                        : type === 1
-                        ? "text-green-500"
-                        : "text-gray-800"
-                    }
+                    style={{
+                      color: line.startsWith("+")
+                        ? "green"
+                        : line.startsWith("-")
+                        ? "red"
+                        : "black",
+                    }}
                   >
-                    {text}
-                  </span>
+                    {line}
+                  </p>
                 ))
               ) : (
-                <p className="text-gray-500">Nenhuma diferença encontrada.</p>
+                <p>Nenhuma diferença encontrada.</p>
               )}
             </div>
           </div>
