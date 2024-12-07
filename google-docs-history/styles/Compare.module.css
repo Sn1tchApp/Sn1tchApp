@@ -1,0 +1,29 @@
+.container {
+    padding: 20px;
+    text-align: left;
+  }
+  
+  .inputGroup {
+    margin-bottom: 15px;
+  }
+  
+  .diffContainer {
+    margin-top: 20px;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .added {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .removed {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .unchanged {
+    color: black;
+  }

@@ -16,6 +16,9 @@ const Home = () => {
         </a>
         <a href="/charts" className={styles.button}>
           Ver Revisões em Gráficos
+        </a>
+        <a href="/compare" className={styles.button}>
+          Compare Revisões
         </a><br /><br />
       </div>
     </div>
