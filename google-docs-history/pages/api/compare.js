@@ -144,8 +144,8 @@ async function displayVersionHistory(documentId) {
       const revision1Content = await exportRevisionToTextViaURL(documentId, revision1.id);
       const revision2Content = await exportRevisionToTextViaURL(documentId, revision2.id);
 
-      console.log("Revisão 1:", revision1Content);
-      console.log("Revisão 2:", revision2Content);
+      console.log("Revisão 1:\n", revision1Content, "\n");
+      console.log("Revisão 2:\n", revision2Content, "\n");
 
       if (revision1Content && revision2Content) {
         // Comparar conteúdo das revisões
